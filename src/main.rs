@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+mod camera;
 mod player;
 
 fn main() {
@@ -8,6 +9,7 @@ fn main() {
 
     app.add_plugins((
         DefaultPlugins,
+        camera::CameraPlugin,
         player::PlayerPlugin,
     ));
 

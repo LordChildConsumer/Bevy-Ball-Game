@@ -1,3 +1,15 @@
+use bevy::prelude::*;
+
+mod player;
+
 fn main() {
-    println!("Hello, world!");
+
+    let mut app: App = App::new();
+
+    app.add_plugins((
+        DefaultPlugins,
+    ));
+
+    app.run();
+
 }

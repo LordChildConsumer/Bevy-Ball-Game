@@ -8,6 +8,7 @@ fn main() {
 
     app.add_plugins((
         DefaultPlugins,
+        player::PlayerPlugin,
     ));
 
     app.run();

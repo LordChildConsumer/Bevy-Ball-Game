@@ -1,13 +1,12 @@
 use rand::prelude::*;
 use bevy::{
-    prelude::*,
-    window::PrimaryWindow,
+    audio::Volume, prelude::*, window::PrimaryWindow
 };
 
 const ENEMY_SPEED: f32 = 200.0;
-const ENEMY_RADIUS: f32 = 32.0;
 const ENEMY_COUNT: usize = 4;
-
+const PLAYER_RADIUS: f32 = 32.0; // Should really make a base actor component but whatever
+const ENEMY_RADIUS: f32 = 32.0;
 
 pub struct EnemyPlugin;
 
@@ -101,21 +100,56 @@ fn move_enemies(
 */
 
 fn update_enemy_direction(
+    mut commands: Commands,
     mut enemy_q: Query<(&Transform, &mut Enemy)>,
     window_q: Query<&Window, With<PrimaryWindow>>,
+    asset_server: Res<AssetServer>,
 ) {
 
     let window = window_q.get_single().unwrap();
     
     for (transform, mut enemy) in enemy_q.iter_mut() {
+        let mut dir_changed: bool = false;
         let translation = transform.translation;
         
-        if translation.x != clamp_to_window(translation.x, 0.0, window).x  { enemy.direction.x *= -1.0; }
-        if translation.y != clamp_to_window(0.0, translation.y, window).y  { enemy.direction.y *= -1.0; }
+        // Bounce off walls
+        if translation.x != clamp_to_window(translation.x, 0.0, window).x  { enemy.direction.x *= -1.0; dir_changed = true; }
+        if translation.y != clamp_to_window(0.0, translation.y, window).y  { enemy.direction.y *= -1.0; dir_changed = true; }
+
+
+        if dir_changed {
+
+            // Pick sound
+            let sound: Handle<AudioSource> = if random::<f32>() > 0.5 {
+                asset_server.load("sounds/pluck_001.ogg")
+            } else {
+                asset_server.load("sounds/pluck_002.ogg")
+            };
+
+            commands.spawn(
+                AudioSourceBundle {
+                    source: sound,
+                    settings: PlaybackSettings {
+                        volume: Volume::new(0.3),
+                        ..default()
+                    }
+                }
+            );
+        }
 
     }
 }
 
+
+
+
+/*
+    ---------------------------------------
+    ---- Detect Collisions With Player ----
+    ---------------------------------------
+*/
+
+// TODO: Implement this lol
 
 
 

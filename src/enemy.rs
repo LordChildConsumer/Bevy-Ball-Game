@@ -103,6 +103,7 @@ fn move_enemies(
     ---------------------------------
 */
 
+// FIXME: Something in here can cause the enemies to keep changing direction and play the sound a thousand times.
 fn update_enemy_direction(
     mut commands: Commands,
     mut enemy_q: Query<(&Transform, &mut Enemy)>,
@@ -122,7 +123,6 @@ fn update_enemy_direction(
 
 
         if dir_changed {
-
             // Pick sound
             let sound: Handle<AudioSource> = if random::<f32>() > 0.5 {
                 asset_server.load("sounds/pluck_001.ogg")

@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 mod camera;
 mod player;
+mod enemy;
 
 fn main() {
 
@@ -11,6 +12,7 @@ fn main() {
         DefaultPlugins,
         camera::CameraPlugin,
         player::PlayerPlugin,
+        enemy::EnemyPlugin,
     ));
 
     app.run();

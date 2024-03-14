@@ -1,7 +1,10 @@
 use rand::prelude::*;
+use crate::player::Player;
 use bevy::{
     audio::Volume, prelude::*, window::PrimaryWindow
 };
+
+
 
 const ENEMY_SPEED: f32 = 200.0;
 const ENEMY_COUNT: usize = 4;
@@ -19,6 +22,7 @@ impl Plugin for EnemyPlugin {
         app.add_systems(Update, (
             move_enemies,
             update_enemy_direction,
+            collide_with_player,
         ));
     }
 }
@@ -149,7 +153,34 @@ fn update_enemy_direction(
     ---------------------------------------
 */
 
-// TODO: Implement this lol
+fn collide_with_player(
+    mut commands: Commands,
+    mut player_q: Query<(Entity, &Transform), With<Player>>,
+    enemy_q: Query<&Transform, With<Enemy>>,
+    asset_server: Res<AssetServer>,
+) {
+    if let Ok((p_entity, p_transform)) = player_q.get_single_mut() {
+        for e_transform in enemy_q.iter() {
+
+            let distance = p_transform.translation.distance(e_transform.translation);
+            if distance < PLAYER_RADIUS + ENEMY_RADIUS {
+
+                // Play explosion sound
+                commands.spawn(
+                    AudioSourceBundle {
+                        source: asset_server.load("sounds/explosionCrunch_000.ogg") as Handle<AudioSource>,
+                        ..default()
+                    }
+                );
+
+
+                // Despawn Player
+                commands.entity(p_entity).despawn();
+
+            }
+        }
+    }
+}
 
 
 

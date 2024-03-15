@@ -141,8 +141,8 @@ pub fn collide_with_enemy(
                 // Play explosion sound
                 commands.spawn(
                     AudioSourceBundle {
-                        source: asset_server.load("sounds/explosionCrunch_000.ogg") as Handle<AudioSource>,
-                        ..default()
+                        source: asset_server.load("sounds/player_death.ogg") as Handle<AudioSource>,
+                        settings: PlaybackSettings { volume: Volume::new(0.3), ..default() }
                     }
                 );
 
@@ -189,9 +189,9 @@ pub fn collide_with_star(
                 // Play sound
                 commands.spawn(
                     AudioSourceBundle { 
-                        source: asset_server.load("sounds/laserLarge_000.ogg") as Handle<AudioSource>,
+                        source: asset_server.load("sounds/collect_star.ogg") as Handle<AudioSource>,
                         settings: PlaybackSettings {
-                            volume: Volume::new(0.5),
+                            volume: Volume::new(0.2),
                             ..default()
                         },
                         ..default()

@@ -108,16 +108,16 @@ pub fn update_enemy_direction(
         if dir_changed {
             // Pick sound
             let sound: Handle<AudioSource> = if random::<f32>() > 0.5 {
-                asset_server.load("sounds/pluck_001.ogg")
+                asset_server.load("sounds/enemy_bounce_1.ogg")
             } else {
-                asset_server.load("sounds/pluck_002.ogg")
+                asset_server.load("sounds/enemy_bounce_2.ogg")
             };
 
             commands.spawn(
                 AudioSourceBundle {
                     source: sound,
                     settings: PlaybackSettings {
-                        volume: Volume::new(0.3),
+                        volume: Volume::new(0.2),
                         ..default()
                     }
                 }

@@ -10,6 +10,16 @@ const ENEMY_SPEED: f32 = 200.0;
 const ENEMY_COUNT: usize = 4;
 const PLAYER_RADIUS: f32 = 32.0; // Should really make a base actor component but whatever
 const ENEMY_RADIUS: f32 = 32.0;
+const SPAWN_MARGIN: f32 = 4.0;
+
+
+
+
+/*
+    ---------------------
+    ---- Entry Point ----
+    ---------------------
+*/
 
 pub struct EnemyPlugin;
 
@@ -29,6 +39,12 @@ impl Plugin for EnemyPlugin {
 
 
 
+
+/*
+    --------------------
+    ---- Components ----
+    --------------------
+*/
 
 #[derive(Component)]
 struct Enemy {
@@ -191,10 +207,10 @@ fn collide_with_player(
 */
 
 fn clamp_to_window(x: f32, y: f32, window: &Window) -> Vec3 {
-    let x_min = 0.0 + ENEMY_RADIUS;
-    let x_max = window.width() - ENEMY_RADIUS;
-    let y_min = 0.0 + ENEMY_RADIUS;
-    let y_max = window.height() - ENEMY_RADIUS;
+    let x_min = 0.0 + ENEMY_RADIUS + SPAWN_MARGIN;
+    let x_max = window.width() - ENEMY_RADIUS - SPAWN_MARGIN;
+    let y_min = 0.0 + ENEMY_RADIUS + SPAWN_MARGIN;
+    let y_max = window.height() - ENEMY_RADIUS - SPAWN_MARGIN;
 
 
     return Vec3::new(

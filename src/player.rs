@@ -4,15 +4,16 @@ use bevy::{
 };
 
 
-// Player Stuff
 const PLAYER_SPEED: f32 = 500.0;
 const PLAYER_RADIUS: f32 = 32.0;
 
 
+
+
 /*
-    ----------------------------
-    ---- Plugin Entry Point ----
-    ----------------------------
+    ---------------------
+    ---- Entry Point ----
+    ---------------------
 */
 
 pub struct PlayerPlugin;
@@ -32,6 +33,12 @@ impl Plugin for PlayerPlugin {
 
 
 
+
+/*
+    --------------------
+    ---- Components ----
+    --------------------
+*/
 
 #[derive(Component)]
 pub struct Player;

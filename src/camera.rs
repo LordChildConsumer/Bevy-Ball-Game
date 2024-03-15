@@ -6,6 +6,12 @@ use bevy::{
 
 
 
+/*
+    --------------------
+    ---- Components ----
+    --------------------
+*/
+
 pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
@@ -16,6 +22,12 @@ impl Plugin for CameraPlugin {
 
 
 
+
+/*
+    ----------------------
+    ---- Spawn Camera ----
+    ----------------------
+*/
 
 fn spawn_camera(
     mut commands: Commands,

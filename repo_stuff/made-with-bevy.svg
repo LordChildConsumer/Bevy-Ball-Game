@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="164.86666870117188"
+   height="35"
+   viewBox="0 0 164.86666870117188 35"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="made-with-bevy.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="5.2648604"
+     inkscape:cx="82.433334"
+     inkscape:cy="17.569317"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3" />
+  <rect
+     width="105.9000015258789"
+     height="35"
+     fill="#b3b3b3"
+     style="--darkreader-inline-fill: #0a85ac;"
+     data-darkreader-inline-fill=""
+     id="rect1" />
+  <rect
+     x="105.9000015258789"
+     width="58.96666717529297"
+     height="35"
+     fill="#282828"
+     style="--darkreader-inline-fill: #2272a2;"
+     data-darkreader-inline-fill=""
+     id="rect2" />
+  <text
+     x="52.955997"
+     y="21.802"
+     font-size="12px"
+     font-family="Roboto, sans-serif"
+     fill="#282828"
+     text-anchor="middle"
+     alignment-baseline="middle"
+     letter-spacing="2"
+     data-darkreader-inline-fill=""
+     id="text2">MADE WITH</text>
+  <text
+     x="134.92133"
+     y="21.784"
+     font-size="12px"
+     font-family="Montserrat, sans-serif"
+     fill="#ececec"
+     text-anchor="middle"
+     font-weight="900"
+     alignment-baseline="middle"
+     letter-spacing="2"
+     data-darkreader-inline-fill=""
+     id="text3">BEVY</text>
+</svg>

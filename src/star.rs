@@ -1,9 +1,13 @@
 use rand::prelude::*;
+use crate::player::Player;
 use bevy::{
     prelude::*,
     window::PrimaryWindow,
+    audio::Volume,
 };
 
+
+const PLAYER_RADIUS: f32 = 32.0;
 
 const STAR_COUNT: i32 = 10;
 const STAR_RADIUS: f32 = 15.0;
@@ -21,7 +25,11 @@ pub struct StarPlugin;
 
 impl Plugin for StarPlugin {
     fn build(&self, app: &mut App) {
+        // Startup
         app.add_systems(Startup, spawn_stars);
+
+        // Update
+        app.add_systems(Update, collide_with_player);
     }
 }
 
@@ -68,10 +76,53 @@ fn spawn_stars(
                 texture: asset_server.load("sprites/star.png"),
                 ..default()
             },
-            Star,
+            Star {},
         ));
 
     }
+}
+
+
+
+
+/*
+    ---------------------------------------
+    ---- Detect Collisions With Player ----
+    ---------------------------------------
+*/
+
+fn collide_with_player(
+    mut commands: Commands,
+    player_q: Query<&Transform, With<Player>>,
+    star_q: Query<(Entity, &Transform), With<Star>>,
+    asset_server: Res<AssetServer>,
+) {
+
+    if let Ok(p_transform) = player_q.get_single() {
+        for (s_entity, s_transform) in star_q.iter() {
+
+            let distance = p_transform.translation.distance(s_transform.translation);
+
+            if distance <= STAR_RADIUS + PLAYER_RADIUS {
+
+                commands.entity(s_entity).despawn();
+
+                commands.spawn(
+                    AudioSourceBundle { 
+                        source: asset_server.load("sounds/laserLarge_000.ogg") as Handle<AudioSource>,
+                        settings: PlaybackSettings {
+                            volume: Volume::new(0.5),
+                            ..default()
+                        },
+                        ..default()
+                    }
+                );
+
+            }
+
+        }
+    }
+
 }
 
 

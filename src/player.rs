@@ -66,7 +66,7 @@ fn spawn_player(
             texture: asset_server.load("sprites/ball_blue_large.png"),
             ..default()
         },
-        Player,
+        Player {},
     ));
 }
 

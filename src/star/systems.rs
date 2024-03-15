@@ -11,6 +11,7 @@ use crate::{
     star::components::*,
     star::resources::*,
     game::resources::*,
+    utils::clamp_to_window,
 };
 
 
@@ -34,7 +35,8 @@ pub fn spawn_stars(
         let pos = clamp_to_window(
             random::<f32>() * window.width(),
             random::<f32>() * window.height(),
-            window
+            RADIUS,
+            window,
         );
 
 
@@ -103,6 +105,7 @@ pub fn spawn_over_time(
         let pos = clamp_to_window(
             random::<f32>() * window.width(),
             random::<f32>() * window.height(),
+            RADIUS,
             window
         );
 
@@ -116,27 +119,4 @@ pub fn spawn_over_time(
             Star {},
         ));
     }
-}
-
-
-
-
-/*
-    -------------------------
-    ---- Clamp To Window ----
-    -------------------------
-*/
-
-pub fn clamp_to_window(x: f32, y: f32, window: &Window) -> Vec3 {
-    let x_min = 0.0 + RADIUS;
-    let x_max = window.width() - RADIUS;
-    let y_min = 0.0 + RADIUS;
-    let y_max = window.height() - RADIUS;
-
-
-    return Vec3::new(
-        x.clamp(x_min, x_max),
-        y.clamp(y_min, y_max),
-        0.0
-    );
 }

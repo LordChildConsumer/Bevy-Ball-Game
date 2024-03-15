@@ -7,10 +7,7 @@ use super::{
     SPEED, RADIUS, INITIAL_COUNT, Z_INDEX, SPAWN_MARGIN,
 };
 
-
-// use bevy::prelude::*;
-// use bevy::window::PrimaryWindow;
-// use bevy::audio::Volume;
+use crate::utils::clamp_to_window_margin;
 
 use bevy::{
     prelude::*,
@@ -37,11 +34,13 @@ pub fn spawn_enemies(
     let window = window_q.get_single().unwrap();
 
     for _ in 0..INITIAL_COUNT {
-        let pos = clamp_to_window(
+
+        let pos = clamp_to_window_margin(
             random::<f32>() * window.width(),
             random::<f32>() * window.height(),
-            window,
+            RADIUS,
             SPAWN_MARGIN,
+            window,
         );
 
         commands.spawn(
@@ -103,9 +102,8 @@ pub fn update_enemy_direction(
         let translation = transform.translation;
         
         // Bounce off walls
-        if translation.x != clamp_to_window(translation.x, 0.0, window, 0.0).x  { enemy.direction.x *= -1.0; dir_changed = true; }
-        if translation.y != clamp_to_window(0.0, translation.y, window, 0.0).y  { enemy.direction.y *= -1.0; dir_changed = true; }
-
+        if translation.x != translation.x.clamp(RADIUS, window.width() - RADIUS) { enemy.direction.x *= -1.0; dir_changed = true; }
+        if translation.y != translation.y.clamp(RADIUS, window.height() - RADIUS) { enemy.direction.y *= -1.0; dir_changed = true; }
 
         if dir_changed {
             // Pick sound
@@ -164,11 +162,12 @@ pub fn spawn_over_time(
         let window = window_q.get_single().unwrap();
 
         // Get position
-        let pos = clamp_to_window(
+        let pos = clamp_to_window_margin(
             random::<f32>() * window.width(),
             random::<f32>() * window.height(),
-            window,
+            RADIUS,
             SPAWN_MARGIN,
+            window,
         );
 
         // Spawn Enemy
@@ -183,27 +182,4 @@ pub fn spawn_over_time(
             },
         ));
     }
-}
-
-
-
-
-/*
-    -------------------------
-    ---- Clamp To Window ----
-    -------------------------
-*/
-
-fn clamp_to_window(x: f32, y: f32, window: &Window, margin: f32) -> Vec3 {
-    let x_min = 0.0 + RADIUS + margin;
-    let x_max = window.width() - RADIUS - margin;
-    let y_min = 0.0 + RADIUS + margin;
-    let y_max = window.height() - RADIUS - margin;
-
-
-    return Vec3::new(
-        x.clamp(x_min, x_max),
-        y.clamp(y_min, y_max),
-        0.0
-    );
 }

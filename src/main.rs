@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 
 pub mod events;
+pub mod utils;
 
 mod enemy;
 mod player;

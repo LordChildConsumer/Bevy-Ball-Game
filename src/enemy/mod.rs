@@ -12,7 +12,7 @@ const SPEED: f32 = 200.0;
 const INITIAL_COUNT: usize = 4;
 const Z_INDEX: f32 = 1.0;
 
-const SPAWN_MARGIN: f32 = 16.0;
+const SPAWN_MARGIN: f32 = 32.0;
 const SPAWN_TIME: f32 = 3.0;
 
 

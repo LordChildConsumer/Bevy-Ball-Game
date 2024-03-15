@@ -58,7 +58,6 @@ fn spawn_player(
     asset_server: Res<AssetServer>,
 ) {
     let window = window_q.get_single().unwrap();
-    println!("Window Size: {}/{} ", window.width(), window.height());
 
     commands.spawn((
         SpriteBundle {

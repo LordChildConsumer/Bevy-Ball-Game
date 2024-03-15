@@ -105,8 +105,7 @@ fn collide_with_player(
 
             if distance <= STAR_RADIUS + PLAYER_RADIUS {
 
-                commands.entity(s_entity).despawn();
-
+                // Play sound
                 commands.spawn(
                     AudioSourceBundle { 
                         source: asset_server.load("sounds/laserLarge_000.ogg") as Handle<AudioSource>,
@@ -117,6 +116,9 @@ fn collide_with_player(
                         ..default()
                     }
                 );
+
+                // Despawn Star
+                commands.entity(s_entity).despawn();
 
             }
 

@@ -1,7 +1,9 @@
 use rand::prelude::*;
 use crate::player::Player;
 use bevy::{
-    audio::Volume, prelude::*, window::PrimaryWindow
+    prelude::*,
+    window::PrimaryWindow,
+    audio::Volume,
 };
 
 
@@ -14,7 +16,7 @@ const ENEMY_Z: f32 = 1.0;
 const SPAWN_TIME: f32 = 3.0;
 
 const PLAYER_RADIUS: f32 = 32.0; // Should really make a base actor component but whatever
-const SPAWN_MARGIN: f32 = 4.0;
+const SPAWN_MARGIN: f32 = 16.0;
 
 
 
@@ -102,7 +104,8 @@ fn spawn_enemies(
         let pos = clamp_to_window(
             random::<f32>() * window.width(),
             random::<f32>() * window.height(),
-            window
+            window,
+            SPAWN_MARGIN,
         );
 
         commands.spawn(
@@ -164,8 +167,8 @@ fn update_enemy_direction(
         let translation = transform.translation;
         
         // Bounce off walls
-        if translation.x != clamp_to_window(translation.x, 0.0, window).x  { enemy.direction.x *= -1.0; dir_changed = true; }
-        if translation.y != clamp_to_window(0.0, translation.y, window).y  { enemy.direction.y *= -1.0; dir_changed = true; }
+        if translation.x != clamp_to_window(translation.x, 0.0, window, 0.0).x  { enemy.direction.x *= -1.0; dir_changed = true; }
+        if translation.y != clamp_to_window(0.0, translation.y, window, 0.0).y  { enemy.direction.y *= -1.0; dir_changed = true; }
 
 
         if dir_changed {
@@ -294,7 +297,8 @@ fn spawn_over_time(
         let pos = clamp_to_window(
             random::<f32>() * window.width(),
             random::<f32>() * window.height(),
-            window
+            window,
+            SPAWN_MARGIN,
         );
 
         // Spawn Enemy
@@ -320,11 +324,11 @@ fn spawn_over_time(
     -------------------------
 */
 
-fn clamp_to_window(x: f32, y: f32, window: &Window) -> Vec3 {
-    let x_min = 0.0 + ENEMY_RADIUS + SPAWN_MARGIN;
-    let x_max = window.width() - ENEMY_RADIUS - SPAWN_MARGIN;
-    let y_min = 0.0 + ENEMY_RADIUS + SPAWN_MARGIN;
-    let y_max = window.height() - ENEMY_RADIUS - SPAWN_MARGIN;
+fn clamp_to_window(x: f32, y: f32, window: &Window, margin: f32) -> Vec3 {
+    let x_min = 0.0 + ENEMY_RADIUS + margin;
+    let x_max = window.width() - ENEMY_RADIUS - margin;
+    let y_min = 0.0 + ENEMY_RADIUS + margin;
+    let y_max = window.height() - ENEMY_RADIUS - margin;
 
 
     return Vec3::new(

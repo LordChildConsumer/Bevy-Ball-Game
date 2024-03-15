@@ -7,10 +7,13 @@ use bevy::{
 
 
 const ENEMY_SPEED: f32 = 200.0;
+const ENEMY_RADIUS: f32 = 32.0;
 const ENEMY_COUNT: usize = 4;
 const ENEMY_Z: f32 = 1.0;
+
+const SPAWN_TIME: f32 = 3.0;
+
 const PLAYER_RADIUS: f32 = 32.0; // Should really make a base actor component but whatever
-const ENEMY_RADIUS: f32 = 32.0;
 const SPAWN_MARGIN: f32 = 4.0;
 
 
@@ -34,7 +37,12 @@ impl Plugin for EnemyPlugin {
             move_enemies,
             update_enemy_direction,
             collide_with_player,
+            tick_spawn_timer,
+            spawn_over_time,
         ));
+
+        // Resources
+        app.init_resource::<EnemySpawnTimer>();
     }
 }
 
@@ -50,6 +58,28 @@ impl Plugin for EnemyPlugin {
 #[derive(Component)]
 struct Enemy {
     direction: Vec2,
+}
+
+
+
+
+/*
+    -------------------
+    ---- Resources ----
+    -------------------
+*/
+
+#[derive(Resource)]
+struct EnemySpawnTimer {
+    timer: Timer,
+}
+
+impl Default for EnemySpawnTimer {
+    fn default() -> EnemySpawnTimer {
+        EnemySpawnTimer {
+            timer: Timer::from_seconds(SPAWN_TIME, TimerMode::Repeating)
+        }
+    }
 }
 
 
@@ -197,6 +227,90 @@ fn collide_with_player(
         }
     }
 }
+
+
+
+
+/*
+    --------------------------
+    ---- Tick Spawn Timer ----
+    --------------------------
+*/
+
+fn tick_spawn_timer(
+    mut spawn_timer: ResMut<EnemySpawnTimer>,
+    time: Res<Time>,
+) {
+    spawn_timer.timer.tick(time.delta());
+}
+
+
+
+
+/*
+    -------------------------
+    ---- Spawn Over Time ----
+    -------------------------
+*/
+
+// fn spawn_over_time(
+//     mut commands: Commands,
+//     window_q: Query<&Window, With<PrimaryWindow>>,
+//     asset_server: Res<AssetServer>,
+//     spawn_timer: Res<StarSpawnTimer>,
+// ) {
+//     if spawn_timer.timer.finished() {
+//         let window = window_q.get_single().unwrap();
+
+//         // Get position
+//         let pos = clamp_to_window(
+//             random::<f32>() * window.width(),
+//             random::<f32>() * window.height(),
+//             window
+//         );
+
+//         // Spawn Star
+//         commands.spawn((
+//             SpriteBundle {
+//                 transform: Transform::from_xyz(pos.x, pos.y, 0.0),
+//                 texture: asset_server.load("sprites/star.png"),
+//                 ..default()
+//             },
+//             Star {},
+//         ));
+//     }
+// }
+
+fn spawn_over_time(
+    mut commands: Commands,
+    window_q: Query<&Window, With<PrimaryWindow>>,
+    asset_server: Res<AssetServer>,
+    spawn_timer: Res<EnemySpawnTimer>,
+) {
+    if spawn_timer.timer.finished() {
+        let window = window_q.get_single().unwrap();
+
+        // Get position
+        let pos = clamp_to_window(
+            random::<f32>() * window.width(),
+            random::<f32>() * window.height(),
+            window
+        );
+
+        // Spawn Enemy
+        commands.spawn((
+            SpriteBundle {
+                transform: Transform::from_xyz(pos.x, pos.y, ENEMY_Z),
+                texture: asset_server.load("sprites/ball_red_large.png"),
+                ..default()
+            },
+            Enemy {
+                direction: Vec2::new(random::<f32>(), random::<f32>()).normalize()
+            },
+        ));
+    }
+}
+
 
 
 

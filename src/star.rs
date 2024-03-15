@@ -11,7 +11,7 @@ const PLAYER_RADIUS: f32 = 32.0;
 
 const STAR_COUNT: i32 = 10;
 const STAR_RADIUS: f32 = 15.0;
-const STAR_SPAWN_TIME: f32 = 1.0;
+const SPAWN_TIME: f32 = 1.0;
 
 
 
@@ -40,7 +40,7 @@ impl Plugin for StarPlugin {
 
         // Resources
         app.init_resource::<Score>();
-        app.init_resource::<SpawnTimer>();
+        app.init_resource::<StarSpawnTimer>();
     }
 }
 
@@ -80,14 +80,14 @@ impl Default for Score {
 
 
 #[derive(Resource)]
-struct SpawnTimer {
+struct StarSpawnTimer {
     timer: Timer,
 }
 
-impl Default for SpawnTimer {
-    fn default() -> SpawnTimer {
-        SpawnTimer {
-            timer: Timer::from_seconds(STAR_SPAWN_TIME, TimerMode::Repeating)
+impl Default for StarSpawnTimer {
+    fn default() -> StarSpawnTimer {
+        StarSpawnTimer {
+            timer: Timer::from_seconds(SPAWN_TIME, TimerMode::Repeating)
         }
     }
 }
@@ -203,7 +203,7 @@ fn update_score(score: Res<Score>) {
 */
 
 fn tick_spawn_timer(
-    mut spawn_timer: ResMut<SpawnTimer>,
+    mut spawn_timer: ResMut<StarSpawnTimer>,
     time: Res<Time>,
 ) {
     spawn_timer.timer.tick(time.delta());
@@ -222,7 +222,7 @@ fn spawn_over_time(
     mut commands: Commands,
     window_q: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
-    spawn_timer: Res<SpawnTimer>,
+    spawn_timer: Res<StarSpawnTimer>,
 ) {
     if spawn_timer.timer.finished() {
         let window = window_q.get_single().unwrap();

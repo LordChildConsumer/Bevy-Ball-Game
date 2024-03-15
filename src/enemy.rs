@@ -1,5 +1,8 @@
 use rand::prelude::*;
-use crate::player::Player;
+use crate::{
+    player::Player,
+    game::{GameOver, Score},
+};
 use bevy::{
     prelude::*,
     window::PrimaryWindow,
@@ -205,8 +208,10 @@ fn update_enemy_direction(
 fn collide_with_player(
     mut commands: Commands,
     mut player_q: Query<(Entity, &Transform), With<Player>>,
+    mut game_over_ew: EventWriter<GameOver>,
     enemy_q: Query<&Transform, With<Enemy>>,
     asset_server: Res<AssetServer>,
+    score: Res<Score>,
 ) {
     if let Ok((p_entity, p_transform)) = player_q.get_single_mut() {
         for e_transform in enemy_q.iter() {
@@ -225,6 +230,10 @@ fn collide_with_player(
 
                 // Despawn Player
                 commands.entity(p_entity).despawn();
+
+
+                // Game over
+                game_over_ew.send(GameOver { score: score.value });
 
             }
         }
@@ -255,34 +264,6 @@ fn tick_spawn_timer(
     ---- Spawn Over Time ----
     -------------------------
 */
-
-// fn spawn_over_time(
-//     mut commands: Commands,
-//     window_q: Query<&Window, With<PrimaryWindow>>,
-//     asset_server: Res<AssetServer>,
-//     spawn_timer: Res<StarSpawnTimer>,
-// ) {
-//     if spawn_timer.timer.finished() {
-//         let window = window_q.get_single().unwrap();
-
-//         // Get position
-//         let pos = clamp_to_window(
-//             random::<f32>() * window.width(),
-//             random::<f32>() * window.height(),
-//             window
-//         );
-
-//         // Spawn Star
-//         commands.spawn((
-//             SpriteBundle {
-//                 transform: Transform::from_xyz(pos.x, pos.y, 0.0),
-//                 texture: asset_server.load("sprites/star.png"),
-//                 ..default()
-//             },
-//             Star {},
-//         ));
-//     }
-// }
 
 fn spawn_over_time(
     mut commands: Commands,

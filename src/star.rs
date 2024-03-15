@@ -1,5 +1,8 @@
 use rand::prelude::*;
-use crate::player::Player;
+use crate::{
+    player::Player,
+    game::Score,
+};
 use bevy::{
     prelude::*,
     window::PrimaryWindow,
@@ -39,7 +42,6 @@ impl Plugin for StarPlugin {
 
 
         // Resources
-        app.init_resource::<Score>();
         app.init_resource::<StarSpawnTimer>();
     }
 }
@@ -64,20 +66,6 @@ struct Star;
     ---- Resources ----
     -------------------
 */
-
-#[derive(Resource)]
-struct Score {
-    value: u32,
-}
-
-impl Default for Score {
-    fn default() -> Score {
-        Score {
-            value: 0,
-        }
-    }
-}
-
 
 #[derive(Resource)]
 struct StarSpawnTimer {

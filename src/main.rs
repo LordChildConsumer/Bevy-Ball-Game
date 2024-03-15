@@ -1,8 +1,6 @@
-use bevy::{
-    prelude::*,
-    app::AppExit,
-};
+use bevy::prelude::*;
 
+mod game;
 mod camera;
 mod player;
 mod enemy;
@@ -14,30 +12,15 @@ fn main() {
 
     app.add_plugins((
         DefaultPlugins,
+        game::GamePlugin,
         camera::CameraPlugin,
         player::PlayerPlugin,
         enemy::EnemyPlugin,
         star::StarPlugin,
     ));
 
-    app.add_systems(Update, quit_game);
-
     app.run();
 
 }
 
 
-/*
-    ----------------------------
-    ---- Quit Game With Esc ----
-    ----------------------------
-*/
-
-fn quit_game(
-    keys: Res<ButtonInput<KeyCode>>,
-    mut event_writer: EventWriter<AppExit>,
-) {
-    if keys.just_pressed(KeyCode::Escape) {
-        event_writer.send(AppExit);
-    }
-}

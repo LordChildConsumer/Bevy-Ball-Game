@@ -11,6 +11,7 @@ const PLAYER_RADIUS: f32 = 32.0;
 
 const STAR_COUNT: i32 = 10;
 const STAR_RADIUS: f32 = 15.0;
+const STAR_SPAWN_TIME: f32 = 1.0;
 
 
 
@@ -32,10 +33,14 @@ impl Plugin for StarPlugin {
         app.add_systems(Update, (
             collide_with_player,
             update_score,
+            tick_spawn_timer,
+            spawn_over_time,
         ));
+
 
         // Resources
         app.init_resource::<Score>();
+        app.init_resource::<SpawnTimer>();
     }
 }
 
@@ -61,14 +66,28 @@ struct Star;
 */
 
 #[derive(Resource)]
-pub struct Score {
-    pub value: u32,
+struct Score {
+    value: u32,
 }
 
 impl Default for Score {
     fn default() -> Score {
         Score {
             value: 0,
+        }
+    }
+}
+
+
+#[derive(Resource)]
+struct SpawnTimer {
+    timer: Timer,
+}
+
+impl Default for SpawnTimer {
+    fn default() -> SpawnTimer {
+        SpawnTimer {
+            timer: Timer::from_seconds(STAR_SPAWN_TIME, TimerMode::Repeating)
         }
     }
 }
@@ -163,12 +182,67 @@ fn collide_with_player(
 
 
 /*
+    ----------------------
     ---- Update Score ----
+    ----------------------
 */
 
 fn update_score(score: Res<Score>) {
     if score.is_changed() {
         println!("Score: {}", score.value.to_string());
+    }
+}
+
+
+
+
+/*
+    --------------------------
+    ---- Tick Spawn Timer ----
+    --------------------------
+*/
+
+fn tick_spawn_timer(
+    mut spawn_timer: ResMut<SpawnTimer>,
+    time: Res<Time>,
+) {
+    spawn_timer.timer.tick(time.delta());
+}
+
+
+
+
+/*
+    -------------------------
+    ---- Spawn Over Time ----
+    -------------------------
+*/
+
+fn spawn_over_time(
+    mut commands: Commands,
+    window_q: Query<&Window, With<PrimaryWindow>>,
+    asset_server: Res<AssetServer>,
+    spawn_timer: Res<SpawnTimer>,
+) {
+    if spawn_timer.timer.finished() {
+        let window = window_q.get_single().unwrap();
+
+        // Get position
+        let pos = clamp_to_window(
+            random::<f32>() * window.width(),
+            random::<f32>() * window.height(),
+            window
+        );
+
+        // Spawn Star
+        commands.spawn((
+            SpriteBundle {
+                transform: Transform::from_xyz(pos.x, pos.y, 0.0),
+                texture: asset_server.load("sprites/star.png"),
+                ..default()
+            },
+            Star {},
+        ));
     }
 }
 

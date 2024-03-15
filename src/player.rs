@@ -6,6 +6,7 @@ use bevy::{
 
 const PLAYER_SPEED: f32 = 500.0;
 const PLAYER_RADIUS: f32 = 32.0;
+const PLAYER_Z: f32 = 1.0;
 
 
 
@@ -61,7 +62,7 @@ fn spawn_player(
 
     commands.spawn((
         SpriteBundle {
-            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
+            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, PLAYER_Z),
             texture: asset_server.load("sprites/ball_blue_large.png"),
             ..default()
         },

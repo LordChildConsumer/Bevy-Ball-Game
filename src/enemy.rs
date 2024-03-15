@@ -8,6 +8,7 @@ use bevy::{
 
 const ENEMY_SPEED: f32 = 200.0;
 const ENEMY_COUNT: usize = 4;
+const ENEMY_Z: f32 = 1.0;
 const PLAYER_RADIUS: f32 = 32.0; // Should really make a base actor component but whatever
 const ENEMY_RADIUS: f32 = 32.0;
 const SPAWN_MARGIN: f32 = 4.0;
@@ -77,7 +78,7 @@ fn spawn_enemies(
         commands.spawn(
             (
                 SpriteBundle {
-                    transform: Transform::from_xyz(pos.x, pos.y, 0.0),
+                    transform: Transform::from_xyz(pos.x, pos.y, ENEMY_Z),
                     texture: asset_server.load("sprites/ball_red_large.png"),
                     ..default()
                 },
@@ -119,7 +120,6 @@ fn move_enemies(
     ---------------------------------
 */
 
-// FIXME: Something in here can cause the enemies to keep changing direction and play the sound a thousand times.
 fn update_enemy_direction(
     mut commands: Commands,
     mut enemy_q: Query<(&Transform, &mut Enemy)>,

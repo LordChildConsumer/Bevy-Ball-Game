@@ -29,7 +29,13 @@ impl Plugin for StarPlugin {
         app.add_systems(Startup, spawn_stars);
 
         // Update
-        app.add_systems(Update, collide_with_player);
+        app.add_systems(Update, (
+            collide_with_player,
+            update_score,
+        ));
+
+        // Resources
+        app.init_resource::<Score>();
     }
 }
 
@@ -44,6 +50,28 @@ impl Plugin for StarPlugin {
 
 #[derive(Component)]
 struct Star;
+
+
+
+
+/*
+    -------------------
+    ---- Resources ----
+    -------------------
+*/
+
+#[derive(Resource)]
+pub struct Score {
+    pub value: u32,
+}
+
+impl Default for Score {
+    fn default() -> Score {
+        Score {
+            value: 0,
+        }
+    }
+}
 
 
 
@@ -96,6 +124,7 @@ fn collide_with_player(
     player_q: Query<&Transform, With<Player>>,
     star_q: Query<(Entity, &Transform), With<Star>>,
     asset_server: Res<AssetServer>,
+    mut score: ResMut<Score>,
 ) {
 
     if let Ok(p_transform) = player_q.get_single() {
@@ -104,6 +133,9 @@ fn collide_with_player(
             let distance = p_transform.translation.distance(s_transform.translation);
 
             if distance <= STAR_RADIUS + PLAYER_RADIUS {
+
+                // Increment score
+                score.value += 1;
 
                 // Play sound
                 commands.spawn(
@@ -125,6 +157,19 @@ fn collide_with_player(
         }
     }
 
+}
+
+
+
+
+/*
+    ---- Update Score ----
+*/
+
+fn update_score(score: Res<Score>) {
+    if score.is_changed() {
+        println!("Score: {}", score.value.to_string());
+    }
 }
 
 

@@ -40,8 +40,8 @@ pub fn spawn_camera(
 */
 
 pub fn quit_game(
-    keys: Res<ButtonInput<KeyCode>>,
     mut app_exit_ew: EventWriter<AppExit>,
+    keys: Res<ButtonInput<KeyCode>>,
 ) {
     if keys.just_pressed(KeyCode::Escape) {
         app_exit_ew.send(AppExit);

@@ -72,9 +72,8 @@ pub fn move_player(
         wish_move = wish_move.normalize_or_zero();
         wish_move *= SPEED;
 
-        // Move
+        // Move and confine to window
         let target_pos = p_transform.translation + wish_move * time.delta_seconds();
-
         p_transform.translation = clamp_to_window(
             target_pos.x,
             target_pos.y,
@@ -105,6 +104,7 @@ pub fn collide_with_enemy(
     if let Ok((p_entity, p_transform)) = player_q.get_single_mut() {
         for e_transform in enemy_q.iter() {
 
+            // Distance check
             let distance = p_transform.translation.distance(e_transform.translation);
             if distance < RADIUS + crate::enemy::RADIUS {
 
@@ -140,17 +140,17 @@ pub fn collide_with_enemy(
 
 pub fn collide_with_star(
     mut commands: Commands,
+    mut score: ResMut<Score>,
     player_q: Query<&Transform, With<Player>>,
     star_q: Query<(Entity, &Transform), With<Star>>,
     asset_server: Res<AssetServer>,
-    mut score: ResMut<Score>,
 ) {
 
     if let Ok(p_transform) = player_q.get_single() {
         for (s_entity, s_transform) in star_q.iter() {
 
+            // Distance check
             let distance = p_transform.translation.distance(s_transform.translation);
-
             if distance <= crate::star::RADIUS + RADIUS {
 
                 // Increment score

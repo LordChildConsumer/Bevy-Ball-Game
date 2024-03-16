@@ -15,19 +15,16 @@ use super::{
 };
 
 use crate::{
-    enemy::components::*,
-    game::resources::*,
-    star::components::*,
-    events::*,
+    enemy::components::*, events::*, game::resources::*, star::components::*, utils::clamp_to_window
 };
 
 
 
 
 /*
-    ----------------------------
-    ---- Player Constructor ----
-    ----------------------------
+    ----------------------
+    ---- Spawn Player ----
+    ----------------------
 */
 
 pub fn spawn_player(
@@ -56,11 +53,11 @@ pub fn spawn_player(
     -------------------------
 */
 
-
 pub fn move_player(
+    mut player_q: Query<&mut Transform, With<Player>>,
     keys: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
-    mut player_q: Query<&mut Transform, With<Player>>
+    window_q: Query<&Window, With<PrimaryWindow>>,
 ) {
     if let Ok(mut p_transform) = player_q.get_single_mut() {
 
@@ -76,42 +73,15 @@ pub fn move_player(
         wish_move *= SPEED;
 
         // Move
-        p_transform.translation += wish_move * time.delta_seconds();
+        let target_pos = p_transform.translation + wish_move * time.delta_seconds();
 
-    }
-}
+        p_transform.translation = clamp_to_window(
+            target_pos.x,
+            target_pos.y,
+            RADIUS,
+            window_q.get_single().unwrap()
+        );
 
-
-
-
-/*
-    ------------------------
-    ---- Confine Player ----
-    ------------------------
-*/
-
-pub fn confine_player(
-    mut player_q: Query<&mut Transform, With<Player>>,
-    window_q: Query<&Window, With<PrimaryWindow>>,
-) {
-    if let Ok(mut p_transform) = player_q.get_single_mut() {
-
-        let window = window_q.get_single().unwrap();
-        
-        // Boundaries
-        let x_min = 0.0 + RADIUS;
-        let x_max = window.width() - RADIUS;
-        let y_min = 0.0 + RADIUS;
-        let y_max = window.height() - RADIUS;
-
-        let mut translation = p_transform.translation;
-
-        // Confine player
-        translation.x = translation.x.clamp(x_min, x_max);
-        translation.y = translation.y.clamp(y_min, y_max);
-
-
-        p_transform.translation = translation;
     }
 }
 

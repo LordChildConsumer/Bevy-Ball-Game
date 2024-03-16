@@ -26,7 +26,7 @@ impl Plugin for PlayerPlugin {
         // Update
         app.add_systems(Update, (
             move_player,
-            confine_player,
+            // confine_player,
             collide_with_enemy,
             collide_with_star,
         ));

@@ -4,6 +4,7 @@ use bevy::{
     math::Vec3,
 };
 
+use crate::game::SimulationState;
 use crate::AppState;
 
 
@@ -31,13 +32,15 @@ pub fn transition_to_game_state(
 }
 
 pub fn transition_to_main_menu_state(
-    mut next_state: ResMut<NextState<AppState>>,
+    mut next_app_state: ResMut<NextState<AppState>>,
+    mut next_sim_state: ResMut<NextState<SimulationState>>,
     keys: Res<ButtonInput<KeyCode>>,
     app_state: Res<State<AppState>>,
 ) {
     if keys.just_pressed(KeyCode::KeyM) {
         if app_state.get() != &AppState::MainMenu {
-            next_state.set(AppState::MainMenu);
+            next_app_state.set(AppState::MainMenu);
+            next_sim_state.set(SimulationState::Paused);
             println!("AppState: AppState::MainMenu");
         }
     }

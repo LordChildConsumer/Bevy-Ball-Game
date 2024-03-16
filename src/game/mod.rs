@@ -52,10 +52,19 @@ impl Plugin for GamePlugin {
             player::PlayerPlugin,
         ));
 
-        // Systems
-        app.add_systems(Update, 
-            systems::toggle_pause_game.run_if(in_state(AppState::Game))
+        // Startup
+        app.add_systems(Startup, systems::spawn_camera);
+
+        // Update
+        app.add_systems(Update,
+            (
+                systems::toggle_pause_game.run_if(in_state(AppState::Game)),
+                systems::quit_game,
+            )
         );
+        // app.add_systems(Update, 
+        //     systems::toggle_pause_game.run_if(in_state(AppState::Game))
+        // );
 
     }
 }

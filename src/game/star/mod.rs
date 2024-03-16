@@ -41,7 +41,6 @@ impl Plugin for StarPlugin {
         // Update
         app.add_systems(Update,
             (
-                update_score,
                 tick_spawn_timer,
                 spawn_over_time,
             )

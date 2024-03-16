@@ -92,6 +92,7 @@ pub fn move_enemies(
         
         let direction: Vec3 = Vec3::new(enemy.direction.x, enemy.direction.y, 0.0);
 
+        // ? Maybe make this use clamp_to_window()
         transform.translation += direction * SPEED * time.delta_seconds();
 
     }

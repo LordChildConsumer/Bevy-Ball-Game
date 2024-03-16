@@ -13,10 +13,7 @@ use super::{
     INITIAL_COUNT, RADIUS,
 };
 
-use crate::{
-    utils::clamp_to_window,
-    game::score::resources::*,
-};
+use crate::utils::clamp_to_window;
 
 // use super::{INITIAL_COUNT, RADIUS};
 
@@ -80,21 +77,6 @@ pub fn despawn_stars(
 ) {
     for s_entity in star_q.iter() {
         commands.entity(s_entity).despawn();
-    }
-}
-
-
-
-
-/*
-    ----------------------
-    ---- Update Score ----
-    ----------------------
-*/
-
-pub fn update_score(score: Res<Score>) {
-    if score.is_changed() {
-        println!("Score: {}", score.value.to_string());
     }
 }
 

@@ -1,51 +1,40 @@
+use bevy::prelude::*;
 
-
-use crate::events::*;
-
-use super::resources::HighScores;
-
-use bevy::{
-    prelude::*,
-    window::PrimaryWindow,
-    app::AppExit,
+use crate::{
+    events::*,
+    AppState,
 };
+
+use super::resources::*;
+
+
+
 
 /*
     ----------------------
-    ---- Spawn Camera ----
+    ---- Insert Score ----
     ----------------------
 */
 
-pub fn spawn_camera(
+pub fn insert_score(
     mut commands: Commands,
-    window_q: Query<&Window, With<PrimaryWindow>>
 ) {
-    let window = window_q.get_single().unwrap();
-
-    commands.spawn(
-        Camera2dBundle {
-            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 10.0),
-            ..default()
-        }
-    );
+    commands.insert_resource(Score::default());
 }
 
 
 
 
 /*
-    ----------------------------
-    ---- Quit Game With Esc ----
-    ----------------------------
+    ----------------------
+    ---- Remove Score ----
+    ----------------------
 */
 
-pub fn quit_game(
-    mut app_exit_ew: EventWriter<AppExit>,
-    keys: Res<ButtonInput<KeyCode>>,
+pub fn remove_score(
+    mut commands: Commands,
 ) {
-    if keys.just_pressed(KeyCode::Escape) {
-        app_exit_ew.send(AppExit);
-    }
+    commands.remove_resource::<Score>();
 }
 
 
@@ -58,12 +47,29 @@ pub fn quit_game(
 */
 
 pub fn handle_game_over(
+    mut next_state: ResMut<NextState<AppState>>,
     mut game_over_er: EventReader<GameOver>,
 ) {
     for event in game_over_er.read() {
 
         println!("Final Score: {}", event.score.to_string());
+        next_state.set(AppState::GameOver);
 
+    }
+}
+
+
+
+
+/*
+    ----------------------
+    ---- Update Score ----
+    ----------------------
+*/
+
+pub fn update_score(score: Res<Score>) {
+    if score.is_changed() {
+        println!("Score: {}", score.value.to_string());
     }
 }
 

@@ -1,6 +1,51 @@
-use bevy::prelude::*;
+use bevy::{
+    prelude::*,
+    window::PrimaryWindow,
+    app::AppExit,
+};
 
 use super::SimulationState;
+
+
+
+
+/*
+    ----------------------
+    ---- Spawn Camera ----
+    ----------------------
+*/
+
+pub fn spawn_camera(
+    mut commands: Commands,
+    window_q: Query<&Window, With<PrimaryWindow>>
+) {
+    let window = window_q.get_single().unwrap();
+
+    commands.spawn(
+        Camera2dBundle {
+            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 10.0),
+            ..default()
+        }
+    );
+}
+
+
+
+
+/*
+    ----------------------------
+    ---- Quit Game With Esc ----
+    ----------------------------
+*/
+
+pub fn quit_game(
+    mut app_exit_ew: EventWriter<AppExit>,
+    keys: Res<ButtonInput<KeyCode>>,
+) {
+    if keys.just_pressed(KeyCode::Escape) {
+        app_exit_ew.send(AppExit);
+    }
+}
 
 
 

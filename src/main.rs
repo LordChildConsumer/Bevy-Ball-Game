@@ -1,19 +1,11 @@
 use bevy::prelude::*;
-
+use game::GamePlugin;
 
 pub mod events;
 pub mod utils;
 
-mod enemy;
-mod player;
+mod main_menu;
 mod game;
-mod star;
-
-
-use game::GamePlugin;
-use enemy::EnemyPlugin;
-use player::PlayerPlugin;
-use star::StarPlugin;
 
 
 
@@ -26,9 +18,6 @@ fn main() {
     app.add_plugins((
         DefaultPlugins,
         GamePlugin,
-        EnemyPlugin,
-        PlayerPlugin,
-        StarPlugin,
     ));
 
     app.run();

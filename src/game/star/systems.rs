@@ -5,14 +5,27 @@ use bevy::{
     window::PrimaryWindow,
 };
 
-use super::{INITIAL_COUNT, RADIUS};
+use super::{
+    components::*,
+    resources::*,
+
+    // Constants
+    INITIAL_COUNT, RADIUS,
+};
 
 use crate::{
-    star::components::*,
-    star::resources::*,
-    game::resources::*,
     utils::clamp_to_window,
+    game::score::resources::*,
 };
+
+// use super::{INITIAL_COUNT, RADIUS};
+
+// use crate::{
+//     star::components::*,
+//     star::resources::*,
+//     game::resources::*,
+//     utils::clamp_to_window,
+// };
 
 
 

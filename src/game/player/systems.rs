@@ -15,8 +15,19 @@ use super::{
 };
 
 use crate::{
-    enemy::components::*, events::*, game::resources::*, star::components::*, //utils::clamp_to_window
+    game:: {
+        enemy::components::*,
+        score::resources::*,
+        star::components::*,
+    },
+
+    events::*,
+    // utils::clamp_to_window,
 };
+
+// use crate::{
+//     enemy::components::*, events::*, game::resources::*, star::components::*, //utils::clamp_to_window
+// };
 
 
 
@@ -143,7 +154,7 @@ pub fn collide_with_enemy(
 
             // Distance check
             let distance = p_transform.translation.distance(e_transform.translation);
-            if distance < RADIUS + crate::enemy::RADIUS {
+            if distance < RADIUS + crate::game::star::RADIUS {
 
                 // Play explosion sound
                 commands.spawn(
@@ -188,7 +199,7 @@ pub fn collide_with_star(
 
             // Distance check
             let distance = p_transform.translation.distance(s_transform.translation);
-            if distance <= crate::star::RADIUS + RADIUS {
+            if distance <= crate::game::star::RADIUS + RADIUS {
 
                 // Increment score
                 score.value += 1;

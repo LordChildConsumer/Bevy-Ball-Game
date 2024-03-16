@@ -1,7 +1,49 @@
 use bevy::{
+    prelude::*,
     window::Window,
     math::Vec3,
 };
+
+use crate::AppState;
+
+
+
+
+/*
+    ---------------------
+    ---- Transitions ----
+    ---------------------
+*/
+
+// How to use match:
+// https://bevy-cheatbook.github.io/input/keyboard.html#keyboard-events
+pub fn transition_to_game_state(
+    mut next_state: ResMut<NextState<AppState>>,
+    keys: Res<ButtonInput<KeyCode>>,
+    app_state: Res<State<AppState>>,
+) {
+    if keys.just_pressed(KeyCode::KeyG) {
+        if app_state.get() != &AppState::Game {
+            next_state.set(AppState::Game);
+            println!("Entered: AppState::Game");
+        }
+    }
+}
+
+pub fn transition_to_main_menu_state(
+    mut next_state: ResMut<NextState<AppState>>,
+    keys: Res<ButtonInput<KeyCode>>,
+    app_state: Res<State<AppState>>,
+) {
+    if keys.just_pressed(KeyCode::KeyM) {
+        if app_state.get() != &AppState::MainMenu {
+            next_state.set(AppState::MainMenu);
+            println!("Entered: AppState::MainMenu");
+        }
+    }
+}
+
+
 
 
 /*

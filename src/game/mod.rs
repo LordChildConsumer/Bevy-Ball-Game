@@ -6,6 +6,7 @@
     ########################
 */
 
+mod systems;
 
 
 pub mod enemy;
@@ -16,6 +17,16 @@ mod player;
 
 use bevy::prelude::*;
 
+use crate::AppState;
+
+
+// Simulation State
+#[derive(States, PartialEq, Eq, Debug, Clone, Hash, Default)]
+pub enum SimulationState {
+    #[default]
+    Paused,
+    Running,
+}
 
 
 
@@ -29,6 +40,9 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
+        
+        // Simulation State
+        app.init_state::<SimulationState>();
 
         // Plugins
         app.add_plugins((
@@ -37,6 +51,11 @@ impl Plugin for GamePlugin {
             star::StarPlugin,
             player::PlayerPlugin,
         ));
+
+        // Systems
+        app.add_systems(Update, 
+            systems::toggle_pause_game.run_if(in_state(AppState::Game))
+        );
 
     }
 }

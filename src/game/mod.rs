@@ -16,16 +16,16 @@ mod player;
 
 
 use bevy::prelude::*;
-
 use crate::AppState;
+use systems::*;
 
 
 // Simulation State
 #[derive(States, PartialEq, Eq, Debug, Clone, Hash, Default)]
 pub enum SimulationState {
     #[default]
-    Paused,
     Running,
+    Paused,
 }
 
 
@@ -44,6 +44,9 @@ impl Plugin for GamePlugin {
         // Simulation State
         app.init_state::<SimulationState>();
 
+        // Pause on Enter Game
+        app.add_systems(OnEnter(AppState::Game), pause_simulation);
+
         // Plugins
         app.add_plugins((
             enemy::EnemyPlugin,
@@ -53,18 +56,18 @@ impl Plugin for GamePlugin {
         ));
 
         // Startup
-        app.add_systems(Startup, systems::spawn_camera);
+        app.add_systems(Startup, spawn_camera);
 
         // Update
         app.add_systems(Update,
             (
-                systems::toggle_pause_game.run_if(in_state(AppState::Game)),
-                systems::quit_game,
+                toggle_pause_game.run_if(in_state(AppState::Game)),
+                quit_game,
             )
         );
-        // app.add_systems(Update, 
-        //     systems::toggle_pause_game.run_if(in_state(AppState::Game))
-        // );
+
+        // Unpause on Exit Game
+        app.add_systems(OnExit(AppState::Game), unpause_simulation);
 
     }
 }

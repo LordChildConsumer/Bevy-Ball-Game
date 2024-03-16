@@ -67,3 +67,33 @@ pub fn toggle_pause_game(
         }
     }
 }
+
+
+
+
+/*
+    --------------------------
+    ---- Pause Simulation ----
+    --------------------------
+*/
+
+pub fn pause_simulation(
+    mut next_sim_state: ResMut<NextState<SimulationState>>,
+) {
+    next_sim_state.set(SimulationState::Paused);
+}
+
+
+
+
+/*
+    ----------------------------
+    ---- Unpause Simulation ----
+    ----------------------------
+*/
+
+pub fn unpause_simulation(
+    mut next_sim_state: ResMut<NextState<SimulationState>>,
+) {
+    next_sim_state.set(SimulationState::Running);
+}

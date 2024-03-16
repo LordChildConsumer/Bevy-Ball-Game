@@ -69,6 +69,24 @@ pub fn spawn_stars(
 
 
 /*
+    -----------------------
+    ---- Despawn Stars ----
+    -----------------------
+*/
+
+pub fn despawn_stars(
+    mut commands: Commands,
+    star_q: Query<Entity, With<Star>>,
+) {
+    for s_entity in star_q.iter() {
+        commands.entity(s_entity).despawn();
+    }
+}
+
+
+
+
+/*
     ----------------------
     ---- Update Score ----
     ----------------------

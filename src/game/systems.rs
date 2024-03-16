@@ -17,11 +17,8 @@ pub fn toggle_pause_game(
 ) {
     if keys.just_pressed(KeyCode::Space) {
         match state.get() {
-            SimulationState::Paused => next_state.set(SimulationState::Running),
-            SimulationState::Running => next_state.set(SimulationState::Paused),
+            SimulationState::Paused => {next_state.set(SimulationState::Running); println!("SimulationState: SimulationState::Running")},
+            SimulationState::Running => {next_state.set(SimulationState::Paused); println!("SimulationState: SimulationState::Paused")},
         }
-    
-        println!("SimulationState: {:?}", next_state);
     }
-    
 }

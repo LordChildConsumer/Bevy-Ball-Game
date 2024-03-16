@@ -59,6 +59,24 @@ pub fn spawn_player(
 
 
 /*
+    ------------------------
+    ---- Despawn Player ----
+    ------------------------
+*/
+
+pub fn despawn_player(
+    mut commands: Commands,
+    player_q: Query<Entity, With<Player>>,
+) {
+    for p_entity in player_q.iter() {
+        commands.entity(p_entity).despawn();
+    }
+}
+
+
+
+
+/*
     -------------------------
     ---- Player Movement ----
     -------------------------

@@ -10,6 +10,8 @@
 
 
 use bevy::prelude::*;
+use crate::AppState;
+use super::SimulationState;
 
 mod components;
 mod systems;
@@ -47,16 +49,22 @@ impl Plugin for PlayerPlugin {
         // Configure System Sets
         app.configure_sets(Update, PlayerSystemSet::Movement.before(PlayerSystemSet::Confinement));
         
-        // Startup
-        app.add_systems(Startup, spawn_player);
+        // Enter Game
+        app.add_systems(OnEnter(AppState::Game), spawn_player);
 
         // Update
-        app.add_systems(Update, (
-            move_player.in_set(PlayerSystemSet::Movement),
-            confine_player.in_set(PlayerSystemSet::Confinement),
-            collide_with_enemy,
-            collide_with_star,
-        ));
+        app.add_systems(Update, 
+            (
+                move_player.in_set(PlayerSystemSet::Movement),
+                confine_player.in_set(PlayerSystemSet::Confinement),
+                collide_with_enemy,
+                collide_with_star,
+            )
+            .run_if(in_state(AppState::Game))
+            .run_if(in_state(SimulationState::Running))
+        );
 
+        // Exit Game
+        app.add_systems(OnExit(AppState::Game), despawn_player);
     }
 }

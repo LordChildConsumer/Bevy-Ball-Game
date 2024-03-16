@@ -60,6 +60,24 @@ pub fn spawn_enemies(
 
 
 
+
+/*
+    -------------------------
+    ---- Despawn Enemies ----
+    -------------------------
+*/
+
+pub fn despawn_enemies(
+    mut commands: Commands,
+    enemy_q: Query<Entity, With<Enemy>>,
+) {
+    for e_entity in enemy_q.iter() {
+        commands.entity(e_entity).despawn();
+    }
+}
+
+
+
 /*
     ----------------------
     ---- Move Enemies ----

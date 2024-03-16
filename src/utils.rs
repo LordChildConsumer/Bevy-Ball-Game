@@ -15,7 +15,7 @@ use crate::AppState;
     ---------------------
 */
 
-// How to use match:
+// How to use match for this:
 // https://bevy-cheatbook.github.io/input/keyboard.html#keyboard-events
 pub fn transition_to_game_state(
     mut next_state: ResMut<NextState<AppState>>,
@@ -38,7 +38,7 @@ pub fn transition_to_main_menu_state(
     if keys.just_pressed(KeyCode::KeyM) {
         if app_state.get() != &AppState::MainMenu {
             next_state.set(AppState::MainMenu);
-            println!("Entered: AppState::MainMenu");
+            println!("AppState: AppState::MainMenu");
         }
     }
 }

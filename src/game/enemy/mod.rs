@@ -10,6 +10,8 @@
 
 
 use bevy::prelude::*;
+use crate::AppState;
+use super::SimulationState;
 
 // Modules
 pub mod components;
@@ -45,18 +47,23 @@ pub struct EnemyPlugin;
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
 
-        // Startup
-        app.add_systems(Startup, spawn_enemies);
-
+        // Enter Game
+        app.add_systems(OnEnter(AppState::Game), spawn_enemies);
 
         // Update
-        app.add_systems(Update, (
-            move_enemies,
-            update_enemy_direction,
-            tick_spawn_timer,
-            spawn_over_time,
-        ));
+        app.add_systems(Update,
+            (
+                move_enemies,
+                update_enemy_direction,
+                tick_spawn_timer,
+                spawn_over_time,
+            )
+            .run_if(in_state(AppState::Game))
+            .run_if(in_state(SimulationState::Running))
+        );
 
+        // Exit Game
+        app.add_systems(OnExit(AppState::Game), despawn_enemies);
 
         // Resources
         app.init_resource::<EnemySpawnTimer>();

@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use game::GamePlugin;
+use main_menu::MainManuPlugin;
 
 pub mod events;
 pub mod utils;
@@ -16,10 +17,11 @@ mod game;
     -------------------
 */
 
+// FIXME: If MainMenu is default. player/enemies don't appear..?
 #[derive(States, PartialEq, Eq, Debug, Clone, Hash, Default)]
 pub enum AppState {
-    #[default]
     MainMenu,
+    #[default]
     Game,
     GameOver,
 }
@@ -47,6 +49,7 @@ fn main() {
     app.add_plugins((
         DefaultPlugins,
         GamePlugin,
+        MainManuPlugin,
     ));
 
     // Systems

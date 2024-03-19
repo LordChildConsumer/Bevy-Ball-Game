@@ -15,13 +15,11 @@ use super::{
 };
 
 use crate::{
-    game:: {
+    assets::{PlayerDeathSound, PlayerSprite, StarCollectSound}, events::*, game:: {
         enemy::components::*,
         score::resources::*,
         star::components::*,
-    },
-
-    events::*,
+    }
     // utils::clamp_to_window,
 };
 
@@ -37,16 +35,16 @@ use crate::{
 pub fn spawn_player(
     mut commands: Commands,
     window_q: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
-    // player_sprite: Res<PlayerSprite>,
+    // asset_server: Res<AssetServer>,
+    player_sprite: Res<PlayerSprite>,
 ) {
     let window = window_q.get_single().unwrap();
-    // let sprite = player_sprite.0.clone();
+    let sprite = player_sprite.0.clone();
 
     commands.spawn((
         SpriteBundle {
             transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, Z_INDEX),
-            texture: asset_server.load("sprites/ball_blue_large.png"),
+            texture: sprite, //asset_server.load("sprites/ball_blue_large.png"),
             ..default()
         },
         Player {},
@@ -162,7 +160,8 @@ pub fn collide_with_enemy(
     mut player_q: Query<(Entity, &Transform), With<Player>>,
     mut game_over_ew: EventWriter<GameOver>,
     enemy_q: Query<&Transform, With<Enemy>>,
-    asset_server: Res<AssetServer>,
+    // asset_server: Res<AssetServer>,
+    death_sound: Res<PlayerDeathSound>,
     score: Res<Score>,
 ) {
     if let Ok((p_entity, p_transform)) = player_q.get_single_mut() {
@@ -173,9 +172,10 @@ pub fn collide_with_enemy(
             if distance < RADIUS + crate::game::star::RADIUS {
 
                 // Play explosion sound
+                let explosion_sound = death_sound.0.clone();
                 commands.spawn(
                     AudioSourceBundle {
-                        source: asset_server.load("sounds/player_death.ogg") as Handle<AudioSource>,
+                        source: explosion_sound, //asset_server.load("sounds/player_death.ogg") as Handle<AudioSource>,
                         settings: PlaybackSettings { volume: Volume::new(0.3), ..default() }
                     }
                 );
@@ -207,7 +207,8 @@ pub fn collide_with_star(
     mut score: ResMut<Score>,
     player_q: Query<&Transform, With<Player>>,
     star_q: Query<(Entity, &Transform), With<Star>>,
-    asset_server: Res<AssetServer>,
+    // asset_server: Res<AssetServer>,
+    collect_sound: Res<StarCollectSound>,
 ) {
 
     if let Ok(p_transform) = player_q.get_single() {
@@ -220,10 +221,11 @@ pub fn collide_with_star(
                 // Increment score
                 score.value += 1;
 
+                let sound = collect_sound.0.clone();
                 // Play sound
                 commands.spawn(
                     AudioSourceBundle { 
-                        source: asset_server.load("sounds/collect_star.ogg") as Handle<AudioSource>,
+                        source: sound, //asset_server.load("sounds/collect_star.ogg") as Handle<AudioSource>,
                         settings: PlaybackSettings {
                             volume: Volume::new(0.2),
                             ..default()

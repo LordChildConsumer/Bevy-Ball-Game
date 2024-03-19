@@ -7,7 +7,10 @@ use super::{
     SPEED, RADIUS, INITIAL_COUNT, Z_INDEX, SPAWN_MARGIN,
 };
 
-use crate::utils::clamp_to_window_margin;
+use crate::{
+    assets::{EnemyBounceSound1, EnemyBounceSound2, EnemySprite},
+    utils::clamp_to_window_margin,
+};
 
 use bevy::{
     prelude::*,
@@ -29,7 +32,8 @@ use rand::prelude::*;
 pub fn spawn_enemies(
     mut commands: Commands,
     window_q: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
+    // asset_server: Res<AssetServer>,
+    enemy_sprite: Res<EnemySprite>,
 ) {
     let window = window_q.get_single().unwrap();
 
@@ -43,11 +47,13 @@ pub fn spawn_enemies(
             window,
         );
 
+
+        let sprite = enemy_sprite.0.clone();
         commands.spawn(
             (
                 SpriteBundle {
                     transform: Transform::from_xyz(pos.x, pos.y, Z_INDEX),
-                    texture: asset_server.load("sprites/ball_red_large.png"),
+                    texture: sprite, //asset_server.load("sprites/ball_red_large.png"),
                     ..default()
                 },
                 Enemy {
@@ -111,7 +117,9 @@ pub fn update_enemy_direction(
     mut commands: Commands,
     mut enemy_q: Query<(&Transform, &mut Enemy)>,
     window_q: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
+    // asset_server: Res<AssetServer>,
+    bounce_sound_1: Res<EnemyBounceSound1>,
+    bounce_sound_2: Res<EnemyBounceSound2>,
 ) {
 
     let window = window_q.get_single().unwrap();
@@ -127,9 +135,10 @@ pub fn update_enemy_direction(
         if dir_changed {
             // Pick sound
             let sound: Handle<AudioSource> = if random::<f32>() > 0.5 {
-                asset_server.load("sounds/enemy_bounce_1.ogg")
+                // asset_server.load("sounds/enemy_bounce_1.ogg")
+                bounce_sound_1.0.clone()
             } else {
-                asset_server.load("sounds/enemy_bounce_2.ogg")
+                bounce_sound_2.0.clone()
             };
 
             commands.spawn(

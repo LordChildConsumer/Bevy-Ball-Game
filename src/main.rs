@@ -54,7 +54,10 @@ fn main() {
     ));
 
     // Startup
-    app.add_systems(Startup, assets::load_sprites);
+    app.add_systems(Startup, (
+        assets::load_sprites,
+        assets::load_sounds,
+    ));
 
     // Update
     app.add_systems(Update, (

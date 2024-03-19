@@ -13,7 +13,7 @@ use super::{
     INITIAL_COUNT, RADIUS,
 };
 
-use crate::utils::clamp_to_window;
+use crate::{assets::StarSprite, utils::clamp_to_window};
 
 // use super::{INITIAL_COUNT, RADIUS};
 
@@ -36,7 +36,8 @@ use crate::utils::clamp_to_window;
 pub fn spawn_stars(
     mut commands: Commands,
     window_q: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
+    // asset_server: Res<AssetServer>,
+    star_sprite: Res<StarSprite>,
 ) {
     let window = window_q.get_single().unwrap();
 
@@ -49,11 +50,12 @@ pub fn spawn_stars(
             window,
         );
 
+        let sprite = star_sprite.0.clone();
 
         commands.spawn((
             SpriteBundle {
                 transform: Transform::from_xyz(pos.x, pos.y, 0.0),
-                texture: asset_server.load("sprites/star.png"),
+                texture: sprite, //asset_server.load("sprites/star.png"),
                 ..default()
             },
             Star {},
@@ -108,7 +110,8 @@ pub fn tick_spawn_timer(
 pub fn spawn_over_time(
     mut commands: Commands,
     window_q: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
+    // asset_server: Res<AssetServer>,
+    star_sprite: Res<StarSprite>,
     spawn_timer: Res<StarSpawnTimer>,
 ) {
     if spawn_timer.timer.finished() {
@@ -122,11 +125,12 @@ pub fn spawn_over_time(
             window
         );
 
+        let sprite = star_sprite.0.clone();
         // Spawn Star
         commands.spawn((
             SpriteBundle {
                 transform: Transform::from_xyz(pos.x, pos.y, 0.0),
-                texture: asset_server.load("sprites/star.png"),
+                texture: sprite, //asset_server.load("sprites/star.png"),
                 ..default()
             },
             Star {},

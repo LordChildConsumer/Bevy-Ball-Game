@@ -16,6 +16,9 @@ pub struct GameUIPlugin;
 
 impl Plugin for GameUIPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(hud::GameHudPlugin);
+        app.add_plugins((
+            game_over::GameOverPlugin,
+            hud::GameHudPlugin,
+        ));
     }
 }

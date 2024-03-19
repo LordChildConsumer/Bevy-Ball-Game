@@ -25,9 +25,8 @@ impl Plugin for GameOverPlugin {
         app.add_systems(OnEnter(AppState::GameOver), systems::layout::spawn_game_over);
 
         // Update
-        app.add_systems(Update,
+        app.add_systems(Update, 
             (
-                systems::updates::update_final_score_text,
                 systems::interactions::interact_with_restart_button,
                 systems::interactions::interact_with_menu_button,
                 systems::interactions::interact_with_quit_button,

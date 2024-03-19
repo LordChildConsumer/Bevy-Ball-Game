@@ -17,7 +17,10 @@ pub fn update_final_score_text(
     mut text_q: Query<&mut Text, With<FinalScoreText>>,
 ) {
     for event in game_over_er.read() {
+        println!("Final Score Query: {:?}", text_q);
+
         for mut text in text_q.iter_mut() {
+            println!("Game Over Score: {}", event.score.to_string());
             text.sections[0].value = format!("Final Score: {}", event.score.to_string());
         }
     }

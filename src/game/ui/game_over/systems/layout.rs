@@ -4,9 +4,12 @@ use bevy::{
 };
 
 
-use crate::game::ui::game_over::{
-    components::*,
-    styles::*,
+use crate::game::{
+    score::resources::HighScores,
+    ui::game_over::{
+        components::*,
+        styles::*,
+    },
 };
 
 
@@ -21,6 +24,7 @@ use crate::game::ui::game_over::{
 pub fn spawn_game_over(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
+    high_scores: Res<HighScores>,
 ) {
     commands.spawn((
         NodeBundle {
@@ -51,22 +55,27 @@ pub fn spawn_game_over(
             });
 
             // Final Score Text
-            parent.spawn(
-                (
-                    TextBundle {
-                        text: Text {
-                            sections: vec![TextSection::new(
-                                "Final Score: ",
-                                get_final_score_text_style(&asset_server),
-                            )],
-                            justify: JustifyText::Center,
-                            linebreak_behavior: BreakLineOn::NoWrap,
+            if let Some(final_score) = high_scores.scores.last() {
+                parent.spawn(
+                    (
+                        TextBundle {
+                            text: Text {
+                                sections: vec![
+                                    TextSection::new(
+                                        // "Final Score: ",
+                                        format!("Final Score: {}", final_score.1),
+                                        get_final_score_text_style(&asset_server),
+                                    )
+                                ],
+                                justify: JustifyText::Center,
+                                linebreak_behavior: BreakLineOn::NoWrap,
+                            },
+                            ..default()
                         },
-                        ..default()
-                    },
-                    FinalScoreText {},
-                )
-            );
+                        FinalScoreText {}
+                    )
+                );
+            }
 
             // Restart Button
             parent.spawn(

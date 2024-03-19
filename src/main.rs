@@ -4,6 +4,7 @@ use main_menu::MainManuPlugin;
 
 pub mod events;
 pub mod utils;
+pub mod assets;
 
 mod main_menu;
 mod game;
@@ -20,8 +21,8 @@ mod game;
 // FIXME: If MainMenu is default. player/enemies don't appear..?
 #[derive(States, PartialEq, Eq, Debug, Clone, Hash, Default)]
 pub enum AppState {
-    MainMenu,
     #[default]
+    MainMenu,
     Game,
     GameOver,
 }
@@ -52,7 +53,10 @@ fn main() {
         MainManuPlugin,
     ));
 
-    // Systems
+    // Startup
+    app.add_systems(Startup, assets::load_sprites);
+
+    // Update
     app.add_systems(Update, (
         utils::transition_to_game_state,
         utils::transition_to_main_menu_state,

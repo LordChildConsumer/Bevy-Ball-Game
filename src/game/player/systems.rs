@@ -25,10 +25,6 @@ use crate::{
     // utils::clamp_to_window,
 };
 
-// use crate::{
-//     enemy::components::*, events::*, game::resources::*, star::components::*, //utils::clamp_to_window
-// };
-
 
 
 
@@ -42,8 +38,10 @@ pub fn spawn_player(
     mut commands: Commands,
     window_q: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
+    // player_sprite: Res<PlayerSprite>,
 ) {
     let window = window_q.get_single().unwrap();
+    // let sprite = player_sprite.0.clone();
 
     commands.spawn((
         SpriteBundle {

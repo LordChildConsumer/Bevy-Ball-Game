@@ -8,7 +8,7 @@
 
 mod systems;
 
-
+pub mod ui;
 pub mod enemy;
 pub mod score;
 pub mod star;
@@ -56,6 +56,7 @@ impl Plugin for GamePlugin {
             score::ScorePlugin,
             star::StarPlugin,
             player::PlayerPlugin,
+            ui::GameUIPlugin,
         ));
 
         // Startup

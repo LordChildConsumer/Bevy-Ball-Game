@@ -1,7 +1,7 @@
 use bevy::{
     prelude::*,
     window::PrimaryWindow,
-    app::AppExit,
+    // app::AppExit,
 };
 
 use super::SimulationState;
@@ -38,14 +38,14 @@ pub fn spawn_camera(
     ----------------------------
 */
 
-pub fn quit_game(
-    mut app_exit_ew: EventWriter<AppExit>,
-    keys: Res<ButtonInput<KeyCode>>,
-) {
-    if keys.just_pressed(KeyCode::Escape) {
-        app_exit_ew.send(AppExit);
-    }
-}
+// pub fn quit_game(
+//     mut app_exit_ew: EventWriter<AppExit>,
+//     keys: Res<ButtonInput<KeyCode>>,
+// ) {
+//     if keys.just_pressed(KeyCode::Escape) {
+//         app_exit_ew.send(AppExit);
+//     }
+// }
 
 
 
@@ -60,7 +60,7 @@ pub fn toggle_pause_game(
     state: Res<State<SimulationState>>,
     keys: Res<ButtonInput<KeyCode>>,
 ) {
-    if keys.just_pressed(KeyCode::Space) {
+    if keys.just_pressed(KeyCode::Escape) {
         match state.get() {
             SimulationState::Paused => {next_state.set(SimulationState::Running); println!("SimulationState: SimulationState::Running")},
             SimulationState::Running => {next_state.set(SimulationState::Paused); println!("SimulationState: SimulationState::Paused")},

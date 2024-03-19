@@ -66,7 +66,7 @@ impl Plugin for GamePlugin {
         app.add_systems(Update,
             (
                 toggle_pause_game.run_if(in_state(AppState::Game)),
-                quit_game,
+                // quit_game,
             )
         );
 

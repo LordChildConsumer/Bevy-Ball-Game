@@ -8,6 +8,7 @@ use super::{
 };
 
 use crate::{
+    game::player::components::Player,
     assets::{EnemyBounceSound1, EnemyBounceSound2, EnemySprite},
     utils::clamp_to_window_margin,
 };
@@ -115,7 +116,7 @@ pub fn move_enemies(
 
 pub fn update_enemy_direction(
     mut commands: Commands,
-    mut enemy_q: Query<(&Transform, &mut Enemy)>,
+    mut enemy_q: Query<(&mut Transform, &mut Enemy)>,
     window_q: Query<&Window, With<PrimaryWindow>>,
     // asset_server: Res<AssetServer>,
     bounce_sound_1: Res<EnemyBounceSound1>,
@@ -124,7 +125,7 @@ pub fn update_enemy_direction(
 
     let window = window_q.get_single().unwrap();
     
-    for (transform, mut enemy) in enemy_q.iter_mut() {
+    for (mut transform, mut enemy) in enemy_q.iter_mut() {
         let mut dir_changed: bool = false;
         let translation = transform.translation;
         
@@ -133,6 +134,11 @@ pub fn update_enemy_direction(
         if translation.y != translation.y.clamp(RADIUS, window.height() - RADIUS) { enemy.direction.y *= -1.0; dir_changed = true; }
 
         if dir_changed {
+            // Prevent a million bounces
+            let clamped_pos = clamp_to_window_margin(translation.x, translation.y, RADIUS, 4.0,window);
+            transform.translation.x = clamped_pos.x;
+            transform.translation.y = clamped_pos.y;
+
             // Pick sound
             let sound: Handle<AudioSource> = if random::<f32>() > 0.5 {
                 // asset_server.load("sounds/enemy_bounce_1.ogg")
@@ -183,6 +189,7 @@ pub fn tick_spawn_timer(
 pub fn spawn_over_time(
     mut commands: Commands,
     window_q: Query<&Window, With<PrimaryWindow>>,
+    player_q: Query<&Transform, With<Player>>,
     asset_server: Res<AssetServer>,
     spawn_timer: Res<EnemySpawnTimer>,
 ) {
@@ -198,16 +205,28 @@ pub fn spawn_over_time(
             window,
         );
 
-        // Spawn Enemy
-        commands.spawn((
-            SpriteBundle {
-                transform: Transform::from_xyz(pos.x, pos.y, Z_INDEX),
-                texture: asset_server.load("sprites/ball_red_large.png"),
-                ..default()
-            },
-            Enemy {
-                direction: Vec2::new(random::<f32>(), random::<f32>()).normalize()
-            },
-        ));
+        if let Ok(player_transform) = player_q.get_single() {
+
+            // Prevent enemies from spawning on top of the player
+            let distance = player_transform.translation.distance(pos);
+            if distance > RADIUS + crate::game::player::RADIUS + SPAWN_MARGIN {
+
+                // Spawn Enemy
+                commands.spawn((
+                    SpriteBundle {
+                        transform: Transform::from_xyz(pos.x, pos.y, Z_INDEX),
+                        texture: asset_server.load("sprites/ball_red_large.png"),
+                        ..default()
+                    },
+                    Enemy {
+                        direction: Vec2::new(random::<f32>(), random::<f32>()).normalize()
+                    },
+                ));
+
+            }
+
+        }
+
+        
     }
 }

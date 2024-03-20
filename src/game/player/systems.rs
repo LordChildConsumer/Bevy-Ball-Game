@@ -15,7 +15,9 @@ use super::{
 };
 
 use crate::{
-    assets::{PlayerDeathSound, PlayerSprite, StarCollectSound}, events::*, game:: {
+    assets::{PlayerDeathSound, PlayerSprite, StarCollectSound},
+    
+    events::*, game:: {
         enemy::components::*,
         score::resources::*,
         star::components::*,

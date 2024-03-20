@@ -13,7 +13,7 @@ use bevy::prelude::*;
 use crate::AppState;
 use super::SimulationState;
 
-mod components;
+pub mod components;
 mod systems;
 
 
